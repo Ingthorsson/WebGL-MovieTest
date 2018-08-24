@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="three.min.js"></script>
+    <!-- <script src="JSONLoader.js"></script> -->
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 800px;
+            height: 600px;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        var scene = new THREE.Scene();
+        var width = 800;
+        var height = 600;
+        var camera = new THREE.OrthographicCamera( 0, width, 0, height, -2, 20000 );
+        scene.add( camera );
+        camera.position.z = 120;
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(800, 600);
+        document.body.appendChild(renderer.domElement);
+
+        // GEOMETRY
+        // Cube
+        var geometry = new THREE.BoxGeometry( 1,1,1 );
+        var materialCube2 = new THREE.MeshLambertMaterial( { wireframe: false} );
+        var cube = new THREE.Mesh( geometry, materialCube2 );
+        cube.position.x = 2;
+        cube.position.y = -1.5;
+        cube.position.z = 1;
+        scene.add( cube );
+        // GEOMETRY
+
+        //BG plane
+        var bgGeometry = new THREE.PlaneGeometry( 1024, 1024, 1 );
+        var bgMaterial = [ new THREE.MeshBasicMaterial({ 
+            map: new THREE.TextureLoader().load('images/bgGlow.png'), 
+            side: THREE.DoubleSide 
+        }) ];
+        var bg = new THREE.Mesh( bgGeometry, bgMaterial );
+        bg.position.set( 400,300,0 );
+        scene.add( bg );
+
+        // SPHERE
+        var geometry = new THREE.SphereGeometry( 30, 30, 42 );
+        var sphereTexture = new THREE.TextureLoader().load('images/dot.png');
+        sphereTexture.wrapS = sphereTexture.wrapT = THREE.RepeatWrapping; 
+        sphereTexture.repeat.set( 2, 1 );
+        var materialSphere = new THREE.MeshPhongMaterial( {
+            color: 0xF3FFE2, 
+            specular: 0x00ff00,
+            shininess: 0.2,
+            map: sphereTexture,
+            transparent: true 
+        } );
+        var sphere = new THREE.Mesh( geometry, materialSphere );
+        sphere.position.set( 400,300,100 );
+        scene.add( sphere );
+
+        // WATER 
+        var waterGeometry = new THREE.PlaneGeometry( 800, 260, 1 );
+        waterGeometry.faces[0].vertexColors[0] = new THREE.Color(0x00cebd);
+        waterGeometry.faces[0].vertexColors[1] = new THREE.Color(0x00f7e3);
+        waterGeometry.faces[0].vertexColors[2] = new THREE.Color(0x00cebd);
+
+        waterGeometry.faces[1].vertexColors[0] = new THREE.Color(0x00f7e3);
+        waterGeometry.faces[1].vertexColors[1] = new THREE.Color(0x00f7e3);
+        waterGeometry.faces[1].vertexColors[2] = new THREE.Color(0x00cebd);
+        var waterMaterial = [ new THREE.MeshBasicMaterial({ 
+            color: 0xffffff,
+            vertexColors: THREE.VertexColors,
+            side: THREE.DoubleSide  
+            }) ];
+        var waterPlane = new THREE.Mesh( waterGeometry, waterMaterial );
+        waterPlane.position.set( 400,480,100 );
+        scene.add( waterPlane );
+
+        // SPINNER
+        var spinGeometry = new THREE.PlaneGeometry( 200, 200, 2 );
+        var spinTexture =  new THREE.TextureLoader().load('images/alpha.png');
+        var spinMaterial = [ new THREE.MeshBasicMaterial({ 
+            map: spinTexture,
+            side: THREE.DoubleSide, 
+            opacity: 0.7, 
+            transparent: true 
+        }) ];
+        var spinner = new THREE.Mesh( spinGeometry, spinMaterial );
+        spinner.position.set( 400,300,1 );
+        scene.add( spinner );
+
+        // LIGHT
+        var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.3 );
+        scene.add( ambientLight );
+
+        // LIGHT
+        var pointLight = new THREE.PointLight(0xffffff,1,800);
+        pointLight.position.set(0,300,0);
+        scene.add(pointLight);
+
+
+        // play logic
+        var update = function () {
+            cube.rotation.x += 0.015;
+            cube.rotation.y += 0.015;
+            cube.rotation.z += 0.015;
+            sphere.rotation.y += 0.055;
+            spinner.rotation.z += -0.115;
+        };
+
+        // Draw scene
+        var render = function () {
+            renderer.render(scene, camera);
+        }
+
+        // run movie loop update, render, repeat
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            update();
+            render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+
+</html>
