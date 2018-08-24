@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="three.min.js"></script>
-    <!-- <script src="JSONLoader.js"></script> -->
     <style>
         body {
             margin: 0;
@@ -47,13 +46,14 @@
         // GEOMETRY
 
         //BG plane
-        var bgGeometry = new THREE.PlaneGeometry( 1024, 1024, 1 );
+        var bgGeometry = new THREE.PlaneGeometry( 1500, 1500, 1 );
         var bgMaterial = [ new THREE.MeshBasicMaterial({ 
-            map: new THREE.TextureLoader().load('images/bgGlow.png'), 
+            map: new THREE.TextureLoader().load('images/bgGlow.jpg'), 
             side: THREE.DoubleSide 
         }) ];
         var bg = new THREE.Mesh( bgGeometry, bgMaterial );
         bg.position.set( 400,300,0 );
+        bg.position.set( 660,150,1 );
         scene.add( bg );
 
         // SPHERE
@@ -87,7 +87,7 @@
             side: THREE.DoubleSide  
             }) ];
         var waterPlane = new THREE.Mesh( waterGeometry, waterMaterial );
-        waterPlane.position.set( 400,480,100 );
+        waterPlane.position.set( 400,480,1.001 );
         scene.add( waterPlane );
 
         // SPINNER
@@ -100,7 +100,7 @@
             transparent: true 
         }) ];
         var spinner = new THREE.Mesh( spinGeometry, spinMaterial );
-        spinner.position.set( 400,300,1 );
+        spinner.position.set( 400,300,1.1 );
         scene.add( spinner );
 
         // LIGHT
@@ -120,6 +120,7 @@
             cube.rotation.z += 0.015;
             sphere.rotation.y += 0.055;
             spinner.rotation.z += -0.115;
+            bg.rotation.z += -0.005;
         };
 
         // Draw scene
